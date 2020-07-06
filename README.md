@@ -6,6 +6,11 @@ Middleware for upload files to server storege in HORSE
 $ boss install github.com/giorgiobazzo/horse-upload
 ```
 
+### Supports:
+ - Multipart/form-data Content-Type request
+ - Upload multiple files in the same request
+ - Server-side path settings
+
 ### Sample Horse Server with octet-stream middleware
 ```delphi
 uses
@@ -31,4 +36,9 @@ begin
       end);
 
   App.Start;
+end.
+```
+### In Client-side upload can be easily tested using the curl command line utility. Ex:
+```
+curl -F "files[]=@C:\MyFiles\Doc.pdf" -F "files[]=@C:\MyFiles\Image.jpg" http://localhost:9000/upload
 ```
