@@ -1,8 +1,8 @@
 {
 	"name": "horse-upload",
-	"description": "",
+	"description": "Middleware for upload files to server storege in HORSE",
 	"version": "1.0.0",
-	"homepage": "",
+	"homepage": "https://github.com/giorgiobazzo/horse-upload",
 	"mainsrc": "src/",
 	"projects": [],
 	"dependencies": {
