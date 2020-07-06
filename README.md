@@ -1,6 +1,9 @@
 # horse-upload
 Middleware for upload files to server storege in HORSE
 
+### Official Horse Repository:
+https://github.com/HashLoad/horse
+
 ### For install in your project using [boss](https://github.com/HashLoad/boss):
 ``` sh
 $ boss install github.com/giorgiobazzo/horse-upload
