@@ -6,6 +6,11 @@ Middleware for upload files to server storege in HORSE
 $ boss install github.com/giorgiobazzo/horse-upload
 ```
 
+### Supports:
+ - multipart/form-data content-Type
+ - Upload multiple files in the same request
+ - Server-side path settings
+
 ### Sample Horse Server with octet-stream middleware
 ```delphi
 uses
