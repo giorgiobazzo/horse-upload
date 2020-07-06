@@ -31,4 +31,5 @@ begin
       end);
 
   App.Start;
+end.
 ```
