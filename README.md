@@ -33,3 +33,7 @@ begin
   App.Start;
 end.
 ```
+### In Client-side upload can be easily tested using the curl command line utility. Ex:
+```
+curl -F "files[]=@C:\MyFiles\Doc.pdf" -F "files[]=@C:\MyFiles\Image.jpg" http://localhost:9000/upload
+```
