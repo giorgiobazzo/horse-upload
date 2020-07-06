@@ -14,7 +14,7 @@ $ boss install github.com/giorgiobazzo/horse-upload
  - Upload multiple files in the same request
  - Server-side path settings
 
-### Sample Horse Server with octet-stream middleware
+### Sample Horse Server with upload middleware
 ```delphi
 uses
   Horse, Horse.Upload;
