@@ -7,7 +7,7 @@ $ boss install github.com/giorgiobazzo/horse-upload
 ```
 
 ### Supports:
- - multipart/form-data content-Type
+ - Multipart/form-data Content-Type request
  - Upload multiple files in the same request
  - Server-side path settings
 
