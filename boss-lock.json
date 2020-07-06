@@ -1,0 +1,14 @@
+{
+	"hash": "57473aba189e9a37a32221361d1126b4",
+	"updated": "2020-07-03T18:58:02.08515-03:00",
+	"installedModules": {
+		"github.com/hashload/horse": {
+			"name": "horse",
+			"version": "1.7.7",
+			"hash": "b0bce44e36b320a8ca6bc864f137cb9d",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}
