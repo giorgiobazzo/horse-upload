@@ -45,3 +45,8 @@ end.
 ```
 curl -F "files[]=@C:\MyFiles\Doc.pdf" -F "files[]=@C:\MyFiles\Image.jpg" http://localhost:9000/upload
 ```
+### Settings (TUploadConfig)
+ - StorePath : Path where files will be stored on server.
+ - ForceDir : Creates the path if it doesn't exist.
+ - OverrideFiles : If true it replaces existing files. If false, automatically increments the file name. Ex: file.txt, file_1.txt, file_2.txt ......
+
