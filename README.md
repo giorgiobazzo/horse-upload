@@ -38,17 +38,17 @@ begin
 		
 	//Optional: Callback for each file received
 	LUploadConfig.UploadFileCallBack := procedure(Sender:TObject; AFile : TUploadFileInfo)
-									  begin
-										Writeln('');
-										Writeln('Upload file:' + AFile.filename+' '+AFile.size.ToString);
-									  end;
+	  begin
+		Writeln('');
+		Writeln('Upload file:' + AFile.filename+' '+AFile.size.ToString);
+	  end;
 
 	//Optional: Callback on end of all files
 	LUploadConfig.UploadsFishCallBack := procedure(Sender:TObject; AFiles : TUploadFiles)
-									  begin
-										Writeln('');
-										Writeln('Finish '+AFiles.Count.ToString+' files.' );
-									  end;
+	  begin
+		Writeln('');
+		Writeln('Finish '+AFiles.Count.ToString+' files.' );
+	  end;
 		
 		
         Res.Send<TUploadConfig>(LUploadConfig);
