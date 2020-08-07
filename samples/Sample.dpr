@@ -5,7 +5,7 @@ program Sample;
 {$R *.res}
 
 uses
-  Horse, Horse.Upload;
+  Horse, Horse.Upload, System.SysUtils;
 
 var
   App: THorse;
@@ -26,6 +26,22 @@ begin
       LUploadConfig := TUploadConfig.Create('c:\serverfiles');
       LUploadConfig.ForceDir := True;
       LUploadConfig.OverrideFiles := True;
+
+      //Optional: Callback for each file received
+      LUploadConfig.UploadFileCallBack := procedure(Sender:TObject; AFile : TUploadFileInfo)
+                                          begin
+                                            Writeln('');
+                                            Writeln('Upload file:' + AFile.filename+' '+AFile.size.ToString);
+                                          end;
+
+      //Optional: Callback on end of all files
+      LUploadConfig.UploadsFishCallBack := procedure(Sender:TObject; AFiles : TUploadFiles)
+                                          begin
+                                            Writeln('');
+                                            Writeln('Finish '+AFiles.Count.ToString+' files.' );
+                                          end;
+
+
       Res.Send<TUploadConfig>(LUploadConfig);
     end);
 
