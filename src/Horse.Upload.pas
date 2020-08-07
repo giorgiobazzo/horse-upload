@@ -2,15 +2,43 @@ unit Horse.Upload;
 
 interface
 
-uses System.SysUtils, Horse, System.Classes;
+uses System.SysUtils, Horse, System.Classes,System.JSON;
 
 type
+
+  TUploadFileInfo = record
+    filename : string;
+    fullpath : string;
+    size : Int64;
+    md5 : string;
+    status : string;
+    procedure Clear;
+  end;
+
+  TUploadFiles = TArray<TUploadFileInfo>;
+
+  TUploadFilesHelper = record helper for TUploadFiles
+    function toJsonArray(AWithFullpath:Boolean=True) : TJSONArray;
+    function toJsonString : string;
+    procedure Clear;
+    function Add(AUploadFileInfo:TUploadFileInfo):Integer;
+    function Count:Integer;
+  end;
+
+  TUploadFileCallBack = reference to procedure(Sender:TObject; AFile : TUploadFileInfo);
+  TUploadsFishCallBack = reference to procedure(Sender:TObject; AFiles : TUploadFiles);
 
   TUploadConfig = class
   private
     FStorePath: string;
     FForceDir:Boolean;
     FOverrideFiles:Boolean;
+    FUploadFileCallBack: TUploadFileCallBack;
+    FUploadsFishCallBack: TUploadsFishCallBack;
+    procedure DoUploadFileCallBack(AFile : TUploadFileInfo);
+    procedure DoUploadsFishCallBack(AFiles : TUploadFiles);
+  public
+    constructor Create(AStorePath: string);
   public
     //Path where files will be stored on server
     property StorePath: string read FStorePath write FStorePath;
@@ -19,7 +47,10 @@ type
     //If true it replaces existing files.
     //If false, it automatically increments the file name. Ex: file.txt, file_1.txt, file_2.txt ......
     property OverrideFiles: Boolean read FOverrideFiles write FOverrideFiles default False;
-    constructor Create(AStorePath: string);
+    //Callback for each file received
+    property UploadFileCallBack : TUploadFileCallBack read FUploadFileCallBack write FUploadFileCallBack;
+    //Callback on end of all files
+    property UploadsFishCallBack : TUploadsFishCallBack read FUploadsFishCallBack write FUploadsFishCallBack;
   end;
 
   procedure Upload(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -27,7 +58,7 @@ type
 implementation
 
 uses
-  Web.HTTPApp, System.Math, Web.ReqMulti, System.JSON, IdHashMessageDigest,
+  Web.HTTPApp, System.Math, Web.ReqMulti, IdHashMessageDigest,
   System.IOUtils;
 
 type
@@ -96,14 +127,17 @@ var
   LMpReq : TMultipartContentParserAccess;
 
   LJsResp       : TJSONObject;
-  LJsRespFiles  : TJSONArray;
-  LJsFile       : TJSONObject;
   LFilesOK      : Integer;
   LUploadResponse : string;
   LLocalFilePath : string;
+
+  LUploadFiles : TUploadFiles;
+  LUploadFileInfo : TUploadFileInfo;
+
 begin
   LFilesOK        := 0;
   LUploadResponse := '';
+  LUploadFiles.Clear;
 
   if not AConfig.StorePath.IsEmpty and AConfig.ForceDir then
     TDirectory.CreateDirectory(AConfig.FStorePath);
@@ -119,14 +153,13 @@ begin
     LFilesCount := LFiles.Count;
 
     LJsResp       := TJSONObject.Create;
-    LJsRespFiles  := TJSONArray.Create;
     try
       LJsResp.AddPair(TJSONPair.Create('upload_files_request',TJSONNumber.Create(LFilesCount)));
       try
         for I := 0 to Pred(LFilesCount) do
         begin
-          LJsFile := TJSONObject.Create;
           try
+            LUploadFileInfo.Clear;
             LFile := LFiles[I];
 
             LLocalFilePath := TPath.Combine(AConfig.StorePath, LFile.FileName);
@@ -136,15 +169,16 @@ begin
               LLocalFilePath := TPath.Combine(AConfig.StorePath, LLocalFilePath);
             end;
 
-            LJsFile.AddPair('filename',TJSONString.Create(ExtractFileName(LLocalFilePath)));
-            LJsFile.AddPair('size',TJSONNumber.Create(LFile.Stream.Size));
-            LJsFile.AddPair('md5', MD5FromStream(LFile.Stream));
+            LUploadFileInfo.filename := ExtractFileName(LLocalFilePath);
+            LUploadFileInfo.fullpath := LLocalFilePath;
+            LUploadFileInfo.size := LFile.Stream.Size;
+            LUploadFileInfo.md5 := MD5FromStream(LFile.Stream);
 
             LStream := TFileStream.Create(LLocalFilePath, fmCreate);
             try
               LFile.Stream.Position := 0;
               LStream.CopyFrom(LFile.Stream, LFile.Stream.Size);
-              LJsFile.AddPair('status',TJSONString.Create('ok'));
+              LUploadFileInfo.status := 'ok';
               Inc(LFilesOK);
             finally
               LStream.Free;
@@ -152,14 +186,16 @@ begin
           except
             on E:Exception do
             begin
-              LJsFile.AddPair('status',TJSONString.Create(e.Message));
+              LUploadFileInfo.status := e.Message;
             end;
           end;
-          LJsRespFiles.AddElement(LJsFile);
+          LUploadFiles.Add(LUploadFileInfo);
+          AConfig.DoUploadFileCallBack(LUploadFileInfo);
         end;
       finally
+        AConfig.DoUploadsFishCallBack(LUploadFiles);
         LMpReq.Free;
-        LJsResp.AddPair('files',LJsRespFiles);
+        LJsResp.AddPair('files',LUploadFiles.toJsonArray(False));
         LJsResp.AddPair(TJSONPair.Create('uploaded_files',TJSONNumber.Create(LFilesOK)));
         LUploadResponse := LJsResp.ToJSON;
       end;
@@ -199,6 +235,79 @@ begin
   FStorePath := AStorePath;
   FForceDir := True;
   FOverrideFiles := False;
+end;
+
+{ TUploadFilesHelper }
+
+function TUploadFilesHelper.toJsonString: string;
+var LJsArray : TJSONArray;
+begin
+  LJsArray := toJsonArray;
+  try
+    Result := LJsArray.ToJSON;
+  finally
+    LJsArray.Free;
+  end;
+end;
+
+function TUploadFilesHelper.toJsonArray(AWithFullpath:Boolean=True): TJSONArray;
+var
+  LJsItem  : TJSONObject;
+  LFileInfo : TUploadFileInfo;
+begin
+  Result  := TJSONArray.Create;
+  for LFileInfo in Self do
+  begin
+    LJsItem := TJSONObject.Create;
+    if AWithFullpath then
+      LJsItem.AddPair('fullpath',TJSONString.Create(LFileInfo.fullpath));
+    LJsItem.AddPair('filename',TJSONString.Create(LFileInfo.filename));
+    LJsItem.AddPair('size',TJSONNumber.Create(LFileInfo.size));
+    LJsItem.AddPair('md5', TJSONString.Create(LFileInfo.md5));
+    LJsItem.AddPair('status',TJSONString.Create(LFileInfo.status));
+    Result.AddElement(LJsItem);
+  end;
+end;
+
+procedure TUploadFilesHelper.Clear;
+begin
+  SetLength(Self,0);
+end;
+
+function TUploadFilesHelper.Add(AUploadFileInfo: TUploadFileInfo): Integer;
+begin
+  SetLength(Self, Length(Self) + 1 );
+  Self[High(Self)] := AUploadFileInfo;
+end;
+
+function TUploadFilesHelper.Count: Integer;
+begin
+  Result := Length(Self);
+end;
+
+{ TUploadFileInfo }
+
+procedure TUploadFileInfo.Clear;
+begin
+  filename := '';
+  fullpath := '';
+  size := 0;
+  md5 := '';
+  status := '';
+end;
+
+{TUploadConfig}
+
+procedure TUploadConfig.DoUploadFileCallBack(AFile: TUploadFileInfo);
+begin
+  if Assigned(FUploadFileCallBack) then
+    FUploadFileCallBack(Self,AFile);
+end;
+
+procedure TUploadConfig.DoUploadsFishCallBack(AFiles: TUploadFiles);
+begin
+  if Assigned(FUploadsFishCallBack) then
+    FUploadsFishCallBack(Self,AFiles);
 end;
 
 end.
