@@ -36,19 +36,19 @@ begin
         LUploadConfig.ForceDir := True;
         LUploadConfig.OverrideFiles := True;
 		
-		//Optional: Callback for each file received
-		LUploadConfig.UploadFileCallBack := procedure(Sender:TObject; AFile : TUploadFileInfo)
-										  begin
-											Writeln('');
-											Writeln('Upload file:' + AFile.filename+' '+AFile.size.ToString);
-										  end;
+	//Optional: Callback for each file received
+	LUploadConfig.UploadFileCallBack := procedure(Sender:TObject; AFile : TUploadFileInfo)
+	  begin
+		Writeln('');
+		Writeln('Upload file:' + AFile.filename+' '+AFile.size.ToString);
+	  end;
 
-		//Optional: Callback on end of all files
-		LUploadConfig.UploadsFishCallBack := procedure(Sender:TObject; AFiles : TUploadFiles)
-										  begin
-											Writeln('');
-											Writeln('Finish '+AFiles.Count.ToString+' files.' );
-										  end;
+	//Optional: Callback on end of all files
+	LUploadConfig.UploadsFishCallBack := procedure(Sender:TObject; AFiles : TUploadFiles)
+	  begin
+		Writeln('');
+		Writeln('Finish '+AFiles.Count.ToString+' files.' );
+	  end;
 		
 		
         Res.Send<TUploadConfig>(LUploadConfig);
