@@ -80,7 +80,7 @@
         <DCC_UsePackage>RESTBackendComponents;CloudService;soaprtl;soapmidas;RESTComponents;emsclientfiredac;DataSnapFireDAC;FireDACIBDriver;emsclient;FireDACCommon;soapserver;FireDACCommonDriver;inet;FireDAC;FireDACSqliteDriver;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <SanitizedProjectName>Sample</SanitizedProjectName>
-        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\horse\src;modules\horse-upload\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(DCC_UnitSearchPath);modules\.dcp;modules\.dcu;modules;modules\horse\src;modules\horse-upload\src</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;tethering;FireDACDBXDriver;bindengine;DataSnapClient;IndyIPServer;IndySystem;fmxFireDAC;FMXTee;DbxCommonDriver;xmlrtl;DataSnapNativeClient;rtl;DbxClientDriver;IndyIPClient;DataSnapProviderClient;RtmRxCtlRS25;DBXInterBaseDriver;FmxTeeUI;fmx;dbexpress;IndyCore;dsnap;DataSnapCommon;AndroidBarcodeScannerRS25;IndyIPCommon;ibmonitor;ibxpress;ibxbindings;FireDACDSDriver;CustomIPTransport;bindcomp;dbxcds;dsnapxml;dbrtl;IndyProtocols;RestDatawareCORE;$(DCC_UsePackage)</DCC_UsePackage>
