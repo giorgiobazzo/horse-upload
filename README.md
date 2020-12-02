@@ -21,9 +21,6 @@ uses Horse, Horse.Upload, System.SysUtils;
 begin
   THorse.Use(Upload);
 
-  //In Client-side upload can be easily tested using the curl command line utility. Ex:
-  //curl -F "files[]=@C:\MyFiles\Doc.pdf" -F "files[]=@C:\MyFiles\Image.jpg" http://localhost:9000/upload
-
   THorse.Post('/upload',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
