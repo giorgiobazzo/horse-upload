@@ -6,7 +6,6 @@
 	"mainsrc": "./",
 	"projects": [],
 	"dependencies": {
-		"github.com/giorgiobazzo/horse-upload": "^1.0.4",
-		"github.com/hashload/horse": "2.0.0"
+		"github.com/hashload/horse": "^v2.0.6"
 	}
 }

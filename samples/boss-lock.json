@@ -1,19 +1,11 @@
 {
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
-	"updated": "2020-07-06T17:34:29.7475875-03:00",
+	"updated": "2020-12-02T08:29:49.6888255-03:00",
 	"installedModules": {
-		"github.com/giorgiobazzo/horse-upload": {
-			"name": "horse-upload",
-			"version": "1.0.3",
-			"hash": "89d0199c745f380d4a801ccf2ce0d6a9",
-			"artifacts": {},
-			"failed": false,
-			"changed": false
-		},
 		"github.com/hashload/horse": {
 			"name": "horse",
-			"version": "1.7.8",
-			"hash": "7f82adf0188b2f66e80e7a3c603558c9",
+			"version": "v2.0.6",
+			"hash": "cca1769dfab681cfd26ae8499f9045e1",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
