@@ -6,6 +6,7 @@ program Sample;
 uses Horse, Horse.Upload, System.SysUtils;
 
 begin
+
   THorse.Use(Upload);
 
   //In Client-side upload can be easily tested using the curl command line utility. Ex:
@@ -39,5 +40,12 @@ begin
       Res.Send<TUploadConfig>(LUploadConfig);
     end);
 
+  THorse.OnListen := procedure (AHorse:THorse)
+                     begin
+                        Writeln('Server listening on '+AHorse.Port.ToString);
+                        Writeln('You can test the upload using:');
+                        Writeln('curl -F "files[]=@C:\MyFiles\Doc.pdf" -F "files[]=@C:\MyFiles\Image.jpg" http://localhost:9000/upload');
+                     end;
   THorse.Listen;
+
 end.

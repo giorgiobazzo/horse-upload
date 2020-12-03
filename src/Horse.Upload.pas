@@ -20,7 +20,7 @@ type
     function toJsonArray(AWithFullpath: Boolean = True): TJSONArray;
     function toJsonString: string;
     procedure Clear;
-    procedure Add(AUploadFileInfo: TUploadFileInfo);
+    function Add(AUploadFileInfo: TUploadFileInfo):Integer;
     function Count: Integer;
   end;
 
@@ -265,10 +265,11 @@ begin
   SetLength(Self, 0);
 end;
 
-procedure TUploadFilesHelper.Add(AUploadFileInfo: TUploadFileInfo);
+function TUploadFilesHelper.Add(AUploadFileInfo: TUploadFileInfo):Integer;
 begin
   SetLength(Self, Length(Self) + 1);
   Self[High(Self)] := AUploadFileInfo;
+  Result := High(Self);
 end;
 
 function TUploadFilesHelper.Count: Integer;
