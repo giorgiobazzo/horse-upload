@@ -154,7 +154,7 @@ begin
             LUploadFileInfo.Clear;
             LFile := LFiles[I];
 
-            LLocalFilePath := TPath.Combine(AConfig.StorePath, LFile.FileName);
+            LLocalFilePath := TPath.Combine(AConfig.StorePath, ExtractFileName(LFile.FileName));
             if not AConfig.OverrideFiles then
             begin
               LLocalFilePath := AvailableFileName(LLocalFilePath);
