@@ -4,16 +4,16 @@
 	"installedModules": {
 		"github.com/giorgiobazzo/horse-upload": {
 			"name": "horse-upload",
-			"version": "1.0.5",
-			"hash": "fcc43b3fa21b2f7ee58781f60100d628",
+			"version": "1.1.0",
+			"hash": "842ae6fdc37e85229f38ab77791ee58b",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
 		},
 		"github.com/hashload/horse": {
 			"name": "horse",
-			"version": "v2.0.6",
-			"hash": "cca1769dfab681cfd26ae8499f9045e1",
+			"version": "3.1.0",
+			"hash": "fc3b8eefb46c1a3b387e86ca46a9faa1",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
