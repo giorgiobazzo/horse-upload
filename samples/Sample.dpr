@@ -40,9 +40,9 @@ begin
       Res.Send<TUploadConfig>(LUploadConfig);
     end);
 
-  THorse.OnListen := procedure (AHorse:THorse)
+  THorse.OnListen := procedure
                      begin
-                        Writeln('Server listening on '+AHorse.Port.ToString);
+                        Writeln('Server listening on '+THorse.Port.ToString);
                         Writeln('You can test the upload using:');
                         Writeln('curl -F "files[]=@C:\MyFiles\Doc.pdf" -F "files[]=@C:\MyFiles\Image.jpg" http://localhost:9000/upload');
                      end;
